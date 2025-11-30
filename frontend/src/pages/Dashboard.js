@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -117,8 +119,7 @@ const Dashboard = () => {
   };
 
   const viewItemDetails = (itemId) => {
-    // Navigate to price comparison page or item details
-    window.location.href = `/price-comparison?item=${itemId}`;
+    navigate(`/price-comparison?item=${itemId}`);
   };
 
   if (loading) {

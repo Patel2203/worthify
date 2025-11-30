@@ -279,9 +279,7 @@ const PriceComparison = () => {
                     <div style={{ fontSize: '1.3rem', color: '#1e40af', marginTop: '8px', fontWeight: 'bold' }}>
                       {analysis.googleLensResults.title}
                     </div>
-                    <div style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>
-                      (This is what's ACTUALLY in your image, not the item name you entered)
-                    </div>
+                    
                   </div>
 
                   <div style={{ marginBottom: '12px' }}>

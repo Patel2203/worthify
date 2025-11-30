@@ -139,7 +139,7 @@ const PriceComparison = () => {
               <div>
                 {itemDetails.image_url ? (
                   <img
-                    src={itemDetails.image_url.startsWith('http') ? itemDetails.image_url : `http://localhost:5002/${itemDetails.image_url}`}
+                    src={itemDetails.image_url.startsWith('http') ? itemDetails.image_url : `https://worthify-production.up.railway.app/${itemDetails.image_url}`}
                     alt={itemDetails.item_name}
                     style={{
                       width: '100%',

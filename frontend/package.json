@@ -38,5 +38,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:5002"
+  "proxy": "https://worthify-production.up.railway.app"
 }

@@ -139,7 +139,7 @@ const AppraisalDetail = () => {
         <div className="item-image-large">
           {item.image_url ? (
             <img
-              src={item.image_url.startsWith('http') ? item.image_url : `http://localhost:5002${item.image_url}`}
+              src={item.image_url.startsWith('http') ? item.image_url : `https://worthify-production.up.railway.app${item.image_url}`}
               alt={item.title}
               onError={(e) => {
                 e.target.src = 'https://via.placeholder.com/600x400?text=No+Image';

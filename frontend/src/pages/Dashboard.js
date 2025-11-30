@@ -243,7 +243,7 @@ const Dashboard = () => {
                   <div style={{ position: 'relative', paddingTop: '75%', background: '#f5f5f5' }}>
                     {item.image_url ? (
                       <img
-                        src={item.image_url.startsWith('http') ? item.image_url : `http://localhost:5002/${item.image_url}`}
+                        src={item.image_url.startsWith('http') ? item.image_url : `https://worthify-production.up.railway.app/${item.image_url}`}
                         alt={item.item_name}
                         style={{
                           position: 'absolute',

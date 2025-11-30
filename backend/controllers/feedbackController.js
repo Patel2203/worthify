@@ -1,5 +1,36 @@
 const { pool } = require('../config/database');
 
+// Get recent public feedback (no authentication required)
+exports.getPublicFeedback = async (req, res, next) => {
+  try {
+    const { limit = 6 } = req.query;
+
+    // Get recent high-rated feedback
+    const [feedback] = await pool.query(
+      `SELECT
+        f.feedback_id,
+        f.message,
+        f.rating,
+        f.submitted_at,
+        u.name as user_name
+      FROM feedback f
+      LEFT JOIN users u ON f.user_id = u.user_id
+      WHERE f.rating >= 4
+      ORDER BY f.submitted_at DESC
+      LIMIT ?`,
+      [parseInt(limit)]
+    );
+
+    res.json({
+      success: true,
+      feedback
+    });
+  } catch (error) {
+    console.error('Error fetching public feedback:', error);
+    next(error);
+  }
+};
+
 // Submit feedback
 exports.submitFeedback = async (req, res, next) => {
   try {

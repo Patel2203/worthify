@@ -1,9 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import axios from '../api/axios';
 
 const Home = () => {
   const { user } = useAuth();
+  const [feedback, setFeedback] = useState([]);
+  const [loadingFeedback, setLoadingFeedback] = useState(true);
+
+  useEffect(() => {
+    fetchRecentFeedback();
+  }, []);
+
+  const fetchRecentFeedback = async () => {
+    try {
+      // Fetch recent feedback (public endpoint - no auth needed)
+      const response = await axios.get('/api/feedback/public');
+      setFeedback(response.data.feedback || []);
+    } catch (error) {
+      console.error('Error fetching feedback:', error);
+    } finally {
+      setLoadingFeedback(false);
+    }
+  };
+
+  const renderStars = (rating) => {
+    return [...Array(5)].map((_, index) => (
+      <span key={index} style={{ color: index < rating ? '#f39c12' : '#ddd', fontSize: '1.2rem' }}>
+        ★
+      </span>
+    ));
+  };
 
   return (
     <div className="page">
@@ -77,6 +104,64 @@ const Home = () => {
             <li><strong>Get Results:</strong> Receive estimated value and detailed market analysis</li>
           </ol>
         </div>
+
+        {/* Testimonials Section */}
+        {!loadingFeedback && feedback.length > 0 && (
+          <div style={{ marginTop: '60px' }}>
+            <h2 style={{ textAlign: 'center', color: 'white', marginBottom: '30px', fontSize: '2rem' }}>
+              What Our Users Say
+            </h2>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: '20px',
+              marginTop: '20px'
+            }}>
+              {feedback.slice(0, 6).map((item) => (
+                <div
+                  key={item.feedback_id}
+                  className="card"
+                  style={{
+                    borderLeft: '4px solid #667eea',
+                    background: 'white',
+                    transition: 'transform 0.3s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                >
+                  <div style={{ marginBottom: '15px' }}>
+                    {renderStars(item.rating)}
+                  </div>
+                  <p style={{
+                    color: '#555',
+                    lineHeight: '1.6',
+                    fontStyle: 'italic',
+                    marginBottom: '15px'
+                  }}>
+                    "{item.message}"
+                  </p>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    fontSize: '0.9rem',
+                    color: '#888'
+                  }}>
+                    <span style={{ fontWeight: '600' }}>- {item.user_name}</span>
+                    <span>{new Date(item.submitted_at).toLocaleDateString()}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{ textAlign: 'center', marginTop: '30px' }}>
+              <Link to="/feedback">
+                <button className="btn btn-primary" style={{ padding: '12px 30px' }}>
+                  Share Your Feedback
+                </button>
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

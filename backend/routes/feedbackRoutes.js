@@ -6,8 +6,12 @@ const {
   getAllFeedback,
   getFeedbackStats,
   getMyFeedback,
-  deleteFeedback
+  deleteFeedback,
+  getPublicFeedback
 } = require('../controllers/feedbackController');
+
+// Public routes (no authentication)
+router.get('/public', getPublicFeedback);
 
 // User routes (authenticated)
 router.post('/', authenticate, submitFeedback);

@@ -137,26 +137,7 @@ const Feedback = () => {
             </form>
           </div>
 
-          <div className="feedback-stats">
-            <h3>What We're Working On</h3>
-            <div className="stats-grid">
-              <div className="stat-item">
-                <div className="stat-icon">🚀</div>
-                <h4>AI Improvements</h4>
-                <p>Enhancing price prediction accuracy</p>
-              </div>
-              <div className="stat-item">
-                <div className="stat-icon">👥</div>
-                <h4>Community Features</h4>
-                <p>Better appraisal collaboration tools</p>
-              </div>
-              <div className="stat-item">
-                <div className="stat-icon">📱</div>
-                <h4>Mobile App</h4>
-                <p>iOS and Android apps coming soon</p>
-              </div>
-            </div>
-          </div>
+         
         </div>
       </div>
     </div>

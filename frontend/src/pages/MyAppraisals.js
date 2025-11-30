@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './MyAppraisals.css';
@@ -9,11 +9,7 @@ const MyAppraisals = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetchMyItems();
-  }, []);
-
-  const fetchMyItems = async () => {
+  const fetchMyItems = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -31,7 +27,11 @@ const MyAppraisals = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [navigate]);
+
+  useEffect(() => {
+    fetchMyItems();
+  }, [fetchMyItems]);
 
   const handleDelete = async (itemId) => {
     if (!window.confirm('Are you sure you want to delete this item?')) return;

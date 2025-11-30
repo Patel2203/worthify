@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './AppraisalList.css';
@@ -29,11 +29,7 @@ const AppraisalList = () => {
     'Other'
   ];
 
-  useEffect(() => {
-    fetchAppraisalItems();
-  }, [filters]);
-
-  const fetchAppraisalItems = async () => {
+  const fetchAppraisalItems = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -50,7 +46,11 @@ const AppraisalList = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
+
+  useEffect(() => {
+    fetchAppraisalItems();
+  }, [fetchAppraisalItems]);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;

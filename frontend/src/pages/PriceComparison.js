@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
@@ -13,47 +13,7 @@ const PriceComparison = () => {
   const [analysis, setAnalysis] = useState(null);
   const [priceHistory, setPriceHistory] = useState(null);
 
-  useEffect(() => {
-    fetchItems();
-    // Check if item ID is passed in URL params
-    const params = new URLSearchParams(location.search);
-    const itemId = params.get('item');
-    if (itemId) {
-      setSelectedItem(itemId);
-      fetchItemDetails(itemId);
-    }
-  }, [location]);
-
-  const fetchItems = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('/api/items', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      setItems(response.data.items);
-    } catch (err) {
-      console.error('Failed to load items:', err);
-    }
-  };
-
-  const fetchItemDetails = async (itemId) => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`/api/items/${itemId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      setItemDetails(response.data.item);
-      fetchPriceHistory(itemId);
-    } catch (err) {
-      console.error('Failed to load item details:', err);
-    }
-  };
-
-  const fetchPriceHistory = async (itemId) => {
+  const fetchPriceHistory = useCallback(async (itemId) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(`/api/prices/history/${itemId}`, {
@@ -70,7 +30,47 @@ const PriceComparison = () => {
     } catch (err) {
       console.error('Failed to load price history:', err);
     }
-  };
+  }, []);
+
+  const fetchItemDetails = useCallback(async (itemId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`/api/items/${itemId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setItemDetails(response.data.item);
+      fetchPriceHistory(itemId);
+    } catch (err) {
+      console.error('Failed to load item details:', err);
+    }
+  }, [fetchPriceHistory]);
+
+  const fetchItems = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get('/api/items', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setItems(response.data.items);
+    } catch (err) {
+      console.error('Failed to load items:', err);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchItems();
+    // Check if item ID is passed in URL params
+    const params = new URLSearchParams(location.search);
+    const itemId = params.get('item');
+    if (itemId) {
+      setSelectedItem(itemId);
+      fetchItemDetails(itemId);
+    }
+  }, [location, fetchItems, fetchItemDetails]);
 
   const handleAnalyze = async (e) => {
     e.preventDefault();

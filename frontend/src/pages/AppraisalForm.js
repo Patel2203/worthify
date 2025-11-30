@@ -79,7 +79,7 @@ const AppraisalForm = () => {
         submitData.append('image', image);
       }
 
-      const response = await axios.post(
+      await axios.post(
         '/api/appraisals/items',
         submitData,
         {

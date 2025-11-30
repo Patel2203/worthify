@@ -16,8 +16,20 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
 
-  // Set axios default header
+  // Set axios default header and load user when token changes
   useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const response = await axios.get('/api/auth/profile');
+        setUser(response.data.user);
+      } catch (error) {
+        console.error('Failed to load user:', error);
+        logout();
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       loadUser();
@@ -25,18 +37,6 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   }, [token]);
-
-  const loadUser = async () => {
-    try {
-      const response = await axios.get('/api/auth/profile');
-      setUser(response.data.user);
-    } catch (error) {
-      console.error('Failed to load user:', error);
-      logout();
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const login = async (email, password) => {
     const response = await axios.post('/api/auth/login', { email, password });

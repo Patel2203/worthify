@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './AppraisalDetail.css';
@@ -20,12 +20,7 @@ const AppraisalDetail = () => {
   });
   const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    fetchItemDetails();
-    fetchAppraisals();
-  }, [id]);
-
-  const fetchItemDetails = async () => {
+  const fetchItemDetails = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axios.get(`/api/appraisals/items/${id}`);
@@ -36,9 +31,9 @@ const AppraisalDetail = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
-  const fetchAppraisals = async () => {
+  const fetchAppraisals = useCallback(async () => {
     try {
       const response = await axios.get(`/api/appraisals/items/${id}/appraisals`);
       setAppraisals(response.data.appraisals || []);
@@ -46,7 +41,12 @@ const AppraisalDetail = () => {
     } catch (err) {
       console.error('Failed to fetch appraisals:', err);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    fetchItemDetails();
+    fetchAppraisals();
+  }, [fetchItemDetails, fetchAppraisals]);
 
   const handleAppraisalFormChange = (e) => {
     const { name, value } = e.target;

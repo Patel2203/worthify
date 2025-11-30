@@ -15,6 +15,7 @@ import AppraisalList from './pages/AppraisalList';
 import AppraisalForm from './pages/AppraisalForm';
 import AppraisalDetail from './pages/AppraisalDetail';
 import MyAppraisals from './pages/MyAppraisals';
+import Feedback from './pages/Feedback';
 
 import './App.css';
 
@@ -70,6 +71,7 @@ function App() {
                 </PrivateRoute>
               }
             />
+            <Route path="/feedback" element={<Feedback />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>

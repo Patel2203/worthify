@@ -28,6 +28,7 @@ const Navbar = () => {
               <Link to="/price-comparison" className="nav-link">Price Comparison</Link>
               <Link to="/appraisals" className="nav-link">Appraisals</Link>
               <Link to="/my-appraisals" className="nav-link">My Items</Link>
+              <Link to="/feedback" className="nav-link">Feedback</Link>
 
               {user.role === 'admin' && (
                 <Link to="/admin" className="nav-link">Admin Panel</Link>
@@ -43,6 +44,8 @@ const Navbar = () => {
             </>
           ) : (
             <>
+              <Link to="/appraisals" className="nav-link">Appraisals</Link>
+              <Link to="/feedback" className="nav-link">Feedback</Link>
               <Link to="/login" className="nav-link">Login</Link>
               <Link to="/register" className="nav-link">
                 <button className="btn btn-primary">Sign Up</button>

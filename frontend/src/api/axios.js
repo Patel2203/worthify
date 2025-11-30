@@ -2,9 +2,6 @@ import axios from 'axios';
 
 const instance = axios.create({
   baseURL: process.env.REACT_APP_API_URL || 'https://worthify-production.up.railway.app',
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 // Add token to requests if it exists
@@ -14,6 +11,12 @@ instance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
+    // Set Content-Type to application/json only if not FormData
+    if (!(config.data instanceof FormData)) {
+      config.headers['Content-Type'] = 'application/json';
+    }
+
     return config;
   },
   (error) => {

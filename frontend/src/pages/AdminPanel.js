@@ -79,7 +79,6 @@ const AdminPanel = () => {
                   <th>Email</th>
                   <th>Role</th>
                   <th>Joined</th>
-                  <th>Last Login</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -95,11 +94,6 @@ const AdminPanel = () => {
                       </span>
                     </td>
                     <td>{new Date(user.created_at).toLocaleDateString()}</td>
-                    <td>
-                      {user.last_login
-                        ? new Date(user.last_login).toLocaleString()
-                        : 'Never'}
-                    </td>
                     <td>
                       <div className="action-buttons">
                         <select
@@ -159,23 +153,13 @@ const AdminPanel = () => {
           <div className="card">
             <h3>Quick Stats</h3>
             <div style={{ marginTop: '20px' }}>
-              <div style={{ marginBottom: '15px', padding: '12px', background: '#f8f9fa', borderRadius: '6px' }}>
-                <strong>Total Users:</strong> {users.length}
-              </div>
-              <div style={{ marginBottom: '15px', padding: '12px', background: '#f8f9fa', borderRadius: '6px' }}>
-                <strong>Active Today:</strong> {users.filter(u => {
-                  if (!u.last_login) return false;
-                  const today = new Date().toDateString();
-                  return new Date(u.last_login).toDateString() === today;
-                }).length}
-              </div>
-              <div style={{ marginBottom: '15px', padding: '12px', background: '#f8f9fa', borderRadius: '6px' }}>
-                <strong>New This Month:</strong> {users.filter(u => {
-                  const created = new Date(u.created_at);
-                  const now = new Date();
-                  return created.getMonth() === now.getMonth() &&
-                         created.getFullYear() === now.getFullYear();
-                }).length}
+              <div style={{ padding: '20px', background: '#f8f9fa', borderRadius: '6px', textAlign: 'center' }}>
+                <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#667eea', marginBottom: '10px' }}>
+                  {users.length}
+                </div>
+                <div style={{ fontSize: '1.1rem', color: '#666' }}>
+                  Total Users
+                </div>
               </div>
             </div>
           </div>

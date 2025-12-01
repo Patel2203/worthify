@@ -98,12 +98,6 @@ exports.login = async (req, res, next) => {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
-    // Update last_login timestamp
-    await pool.query(
-      'UPDATE users SET last_login = NOW() WHERE user_id = ?',
-      [user.user_id]
-    );
-
     // Generate token
     const token = generateToken(user);
 

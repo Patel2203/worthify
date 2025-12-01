@@ -97,7 +97,7 @@ const AdminPanel = () => {
                     <td>{new Date(user.created_at).toLocaleDateString()}</td>
                     <td>
                       {user.last_login
-                        ? new Date(user.last_login).toLocaleDateString()
+                        ? new Date(user.last_login).toLocaleString()
                         : 'Never'}
                     </td>
                     <td>
@@ -130,7 +130,7 @@ const AdminPanel = () => {
           <div className="card">
             <h3>Role Distribution</h3>
             <div style={{ marginTop: '20px' }}>
-              {['admin', 'user', 'guest'].map(role => {
+              {['admin', 'user'].map(role => {
                 const count = users.filter(u => u.role === role).length;
                 const percentage = users.length > 0 ? (count / users.length * 100).toFixed(1) : 0;
                 return (
@@ -143,7 +143,7 @@ const AdminPanel = () => {
                       <div
                         style={{
                           width: `${percentage}%`,
-                          background: role === 'admin' ? '#dc3545' : role === 'user' ? '#28a745' : '#6c757d',
+                          background: role === 'admin' ? '#dc3545' : '#28a745',
                           height: '100%',
                           borderRadius: '10px',
                           transition: 'width 0.3s ease'

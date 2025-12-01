@@ -4,7 +4,7 @@ const { pool } = require('../config/database');
 exports.getAllUsers = async (req, res, next) => {
   try {
     const [users] = await pool.query(
-      'SELECT user_id, name, email, role, created_at FROM users ORDER BY created_at DESC'
+      'SELECT user_id, name, email, role, created_at, last_login FROM users ORDER BY created_at DESC'
     );
 
     res.json({

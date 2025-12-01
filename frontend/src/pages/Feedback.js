@@ -120,13 +120,6 @@ const Feedback = () => {
                 />
               </div>
 
-              <div className="feedback-info">
-                <p>
-                  💡 Your feedback helps us make Worthify better for everyone.
-                  We read every submission and use your insights to prioritize new features and improvements.
-                </p>
-              </div>
-
               <button
                 type="submit"
                 className="btn btn-primary btn-submit"

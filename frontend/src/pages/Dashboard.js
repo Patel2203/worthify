@@ -231,7 +231,7 @@ const Dashboard = () => {
 
         {/* Items List */}
         <div className="card">
-          <h3>Your Items</h3>
+          <h3>{user?.role === 'admin' ? 'All Items' : 'Your Items'}</h3>
           {items.length === 0 ? (
             <p style={{ textAlign: 'center', color: '#666', padding: '40px' }}>
               No items yet. Add your first antique item to get started!
@@ -278,6 +278,22 @@ const Dashboard = () => {
                   {/* Item Details */}
                   <div style={{ padding: '16px' }}>
                     <h4 style={{ margin: '0 0 8px 0', fontSize: '1.1rem' }}>{item.item_name}</h4>
+
+                    {/* Show username for admin */}
+                    {user?.role === 'admin' && item.user_name && (
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        marginBottom: '8px',
+                        fontSize: '0.85rem',
+                        color: '#666'
+                      }}>
+                        <span style={{ fontWeight: '600' }}>👤 Owner:</span>
+                        <span>{item.user_name}</span>
+                      </div>
+                    )}
+
                     <p style={{ margin: '0 0 12px 0', color: '#666', fontSize: '0.9rem' }}>
                       {item.description ? item.description.substring(0, 80) + '...' : 'No description'}
                     </p>

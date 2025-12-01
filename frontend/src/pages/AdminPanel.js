@@ -85,9 +85,9 @@ const AdminPanel = () => {
               </thead>
               <tbody>
                 {users.map((user) => (
-                  <tr key={user.id}>
-                    <td>{user.id}</td>
-                    <td>{user.username}</td>
+                  <tr key={user.user_id}>
+                    <td>{user.user_id}</td>
+                    <td>{user.name}</td>
                     <td>{user.email}</td>
                     <td>
                       <span className={`badge badge-${user.role}`}>
@@ -104,16 +104,16 @@ const AdminPanel = () => {
                       <div className="action-buttons">
                         <select
                           value={user.role}
-                          onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                          onChange={(e) => handleRoleChange(user.user_id, e.target.value)}
                           style={{ padding: '6px', borderRadius: '4px', border: '1px solid #ddd' }}
                         >
                           <option value="admin">Admin</option>
                           <option value="user">User</option>
-                          <option value="guest">Guest</option>
                         </select>
                         <button
                           className="btn btn-danger"
-                          onClick={() => handleDeleteUser(user.id)}
+                          onClick={() => handleDeleteUser(user.user_id)}
+                          style={{ marginLeft: '10px' }}
                         >
                           Delete
                         </button>

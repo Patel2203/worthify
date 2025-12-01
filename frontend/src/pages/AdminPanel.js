@@ -29,7 +29,7 @@ const AdminPanel = () => {
 
     try {
       await axios.put(`/api/users/${userId}/role`, { role: newRole });
-      setSuccess('User role updated successfully');
+      setSuccess('User role updated successfully. The user must log out and log back in for changes to take effect.');
       fetchUsers();
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to update user role');

@@ -16,6 +16,7 @@ import AppraisalForm from './pages/AppraisalForm';
 import AppraisalDetail from './pages/AppraisalDetail';
 import MyAppraisals from './pages/MyAppraisals';
 import Feedback from './pages/Feedback';
+import Moderation from './pages/Moderation';
 
 import './App.css';
 
@@ -42,6 +43,14 @@ function App() {
               element={
                 <PrivateRoute roles={['admin']}>
                   <AdminPanel />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/moderation"
+              element={
+                <PrivateRoute roles={['admin']}>
+                  <Moderation />
                 </PrivateRoute>
               }
             />

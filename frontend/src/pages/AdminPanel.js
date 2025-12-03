@@ -63,6 +63,19 @@ const AdminPanel = () => {
         <div className="page-header">
           <h1>Admin Panel</h1>
           <p>User Management Dashboard</p>
+          <div style={{ marginTop: '15px' }}>
+            <a href="/moderation" style={{
+              padding: '10px 20px',
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              color: 'white',
+              borderRadius: '8px',
+              textDecoration: 'none',
+              fontWeight: '500',
+              display: 'inline-block'
+            }}>
+              Go to Content Moderation
+            </a>
+          </div>
         </div>
 
         {error && <div className="error">{error}</div>}

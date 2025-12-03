@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import axios from '../api/axios';
 
 const AdminPanel = () => {
@@ -64,7 +65,7 @@ const AdminPanel = () => {
           <h1>Admin Panel</h1>
           <p>User Management Dashboard</p>
           <div style={{ marginTop: '15px' }}>
-            <a href="/moderation" style={{
+            <Link to="/moderation" style={{
               padding: '10px 20px',
               background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
               color: 'white',
@@ -74,7 +75,7 @@ const AdminPanel = () => {
               display: 'inline-block'
             }}>
               Go to Content Moderation
-            </a>
+            </Link>
           </div>
         </div>
 

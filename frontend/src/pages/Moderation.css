@@ -337,6 +337,10 @@
 
   .stat-number {
     font-size: 2rem;
+    color: #000;
+  }
+  .stat-label{
+    color: #000;
   }
 
   .section-header {

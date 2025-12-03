@@ -59,22 +59,22 @@
 
 .stat-card.reported {
   background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
-  color: white;
+  color: #000;
 }
 
 .stat-card.active {
   background: linear-gradient(135deg, #51cf66 0%, #69db7c 100%);
-  color: white;
+  color: #000;
 }
 
 .stat-card.removed {
   background: linear-gradient(135deg, #868e96 0%, #adb5bd 100%);
-  color: white;
+  color: #000;
 }
 
 .stat-card.total {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  color: #000;
 }
 
 .stat-number {

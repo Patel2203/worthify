@@ -312,7 +312,7 @@ async function fetchEbayPrices(keywords) {
 
     // Parse and return results
     if (searchResponse.data.itemSummaries && searchResponse.data.itemSummaries.length > 0) {
-      return searchResponse.data.itemSummaries.slice(0, 5).map(item => ({
+      return searchResponse.data.itemSummaries.slice(0, 10).map(item => ({
         title: item.title,
         price: parseFloat(item.price?.value || 0),
         url: item.itemWebUrl || `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(keywords)}`

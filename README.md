@@ -76,8 +76,14 @@ Individuals (typically over age 35) who have inherited items or are clearing est
 - Supports casual users in understanding why their item is valued within a certain range.
 
 ### ➤ **Admin Panel**
-- Admins can manage users, review flagged content, and monitor system performance.  
+- Admins can manage users, review flagged content, and monitor system performance.
 - Access to analytics about prediction usage and model performance.
+
+### ➤ **Content Moderation System**
+- Users can report inappropriate appraisal items or appraisals.
+- Admins can review reports, take actions (remove items/appraisals), and manage content status.
+- Real-time moderation statistics dashboard for monitoring platform health.
+- Automated notifications to users when their content is moderated.
 
 ---
 
@@ -241,6 +247,67 @@ CREATE TABLE feedback (
   submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+
+-- Create appraisal items table
+CREATE TABLE appraisal_items (
+  appraisal_item_id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  description TEXT,
+  category VARCHAR(100),
+  image_url VARCHAR(500),
+  status ENUM('active', 'closed', 'reported', 'removed') DEFAULT 'active',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+-- Create appraisals table
+CREATE TABLE appraisals (
+  appraisal_id INT AUTO_INCREMENT PRIMARY KEY,
+  appraisal_item_id INT NOT NULL,
+  appraiser_id INT NOT NULL,
+  estimated_price DECIMAL(10,2),
+  currency VARCHAR(10) DEFAULT 'USD',
+  notes TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (appraisal_item_id) REFERENCES appraisal_items(appraisal_item_id) ON DELETE CASCADE,
+  FOREIGN KEY (appraiser_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+-- Create appraisal reports table
+CREATE TABLE appraisal_reports (
+  report_id INT AUTO_INCREMENT PRIMARY KEY,
+  reporter_id INT NOT NULL,
+  appraisal_item_id INT,
+  appraisal_id INT,
+  report_type VARCHAR(100) NOT NULL,
+  reason TEXT NOT NULL,
+  status ENUM('pending', 'reviewed', 'action_taken', 'dismissed') DEFAULT 'pending',
+  reviewed_by INT,
+  admin_notes TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  reviewed_at TIMESTAMP NULL,
+  FOREIGN KEY (reporter_id) REFERENCES users(user_id) ON DELETE CASCADE,
+  FOREIGN KEY (appraisal_item_id) REFERENCES appraisal_items(appraisal_item_id) ON DELETE CASCADE,
+  FOREIGN KEY (appraisal_id) REFERENCES appraisals(appraisal_id) ON DELETE CASCADE,
+  FOREIGN KEY (reviewed_by) REFERENCES users(user_id) ON DELETE SET NULL
+);
+
+-- Create appraisal notifications table
+CREATE TABLE appraisal_notifications (
+  notification_id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  appraisal_item_id INT,
+  appraisal_id INT,
+  notification_type VARCHAR(100) NOT NULL,
+  message TEXT NOT NULL,
+  is_read BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+  FOREIGN KEY (appraisal_item_id) REFERENCES appraisal_items(appraisal_item_id) ON DELETE CASCADE,
+  FOREIGN KEY (appraisal_id) REFERENCES appraisals(appraisal_id) ON DELETE CASCADE
+);
 ```
 
 ### Backend Setup
@@ -377,9 +444,85 @@ The frontend application will open automatically at `http://localhost:3000`
 
 ### Available API Endpoints
 
+#### Authentication
 - `POST /api/auth/register` - User registration
 - `POST /api/auth/login` - User login
+
+#### Items & Predictions
 - `GET /api/items` - Get user's items
 - `POST /api/items` - Upload new item
 - `GET /api/prices` - Get price predictions
+
+#### User Management
 - `GET /api/users/profile` - Get user profile
+- `GET /api/users` - Get all users (Admin only)
+- `PUT /api/users/:id/role` - Update user role (Admin only)
+- `DELETE /api/users/:id` - Delete user (Admin only)
+
+#### Appraisal Items
+- `GET /api/appraisals/items/public` - Get public appraisal items
+- `GET /api/appraisals/items/:id` - Get appraisal item by ID
+- `POST /api/appraisals/items` - Create new appraisal item (Authenticated)
+- `GET /api/appraisals/items/my/all` - Get user's appraisal items (Authenticated)
+- `PUT /api/appraisals/items/:id` - Update appraisal item (Authenticated)
+- `DELETE /api/appraisals/items/:id` - Delete appraisal item (Authenticated)
+
+#### Appraisals
+- `GET /api/appraisals/items/:appraisal_item_id/appraisals` - Get appraisals for an item
+- `POST /api/appraisals/appraisals` - Create new appraisal (Authenticated)
+- `GET /api/appraisals/appraisals/my/all` - Get user's appraisals (Authenticated)
+- `PUT /api/appraisals/appraisals/:id` - Update appraisal (Authenticated)
+- `DELETE /api/appraisals/appraisals/:id` - Delete appraisal (Authenticated)
+
+#### Notifications
+- `GET /api/appraisals/notifications` - Get user notifications (Authenticated)
+- `GET /api/appraisals/notifications/unread/count` - Get unread count (Authenticated)
+- `PUT /api/appraisals/notifications/:id/read` - Mark notification as read (Authenticated)
+- `PUT /api/appraisals/notifications/read-all` - Mark all as read (Authenticated)
+- `DELETE /api/appraisals/notifications/:id` - Delete notification (Authenticated)
+
+#### Content Moderation
+- `POST /api/appraisals/reports` - Create a report (Authenticated)
+- `GET /api/appraisals/admin/reports` - Get all reports (Admin only)
+- `PUT /api/appraisals/admin/reports/:id/review` - Review a report (Admin only)
+- `GET /api/appraisals/admin/items` - Get all items for moderation (Admin only)
+- `PUT /api/appraisals/admin/items/:id/status` - Update item status (Admin only)
+- `GET /api/appraisals/admin/stats` - Get moderation statistics (Admin only)
+
+#### Feedback
+- `POST /api/feedback` - Submit feedback
+- `GET /api/feedback` - Get all feedback (Admin only)
+
+### New Features Added
+
+#### Content Moderation System
+A comprehensive content moderation system has been added to allow admins to manage user-reported content:
+
+**Frontend:**
+- **Moderation Page** (`/moderation`) - Admin-only page with three tabs:
+  - **Statistics Tab**: Real-time dashboard showing pending reports, reported items, active items, removed items, and total appraisals
+  - **Reports Tab**: View and manage user reports with filtering by status (pending/reviewed/action_taken/dismissed)
+  - **Items Tab**: View and manage all appraisal items with status updates
+
+**Backend:**
+- **Moderation Controller** (`backend/controllers/moderationController.js`):
+  - Report creation and management
+  - Item status updates
+  - Automated user notifications when content is moderated
+  - Statistics dashboard for monitoring
+
+**Database Tables:**
+- `appraisal_items` - Stores items submitted for appraisal
+- `appraisals` - Stores user appraisals/valuations
+- `appraisal_reports` - Stores user reports about inappropriate content
+- `appraisal_notifications` - Stores notifications sent to users
+
+**Access:**
+- Navigate to Admin Panel at `/admin`
+- Click "Go to Content Moderation" button
+- Only accessible to users with admin role
+
+### Updated User Roles
+The system now supports role-based access control:
+- **user**: Regular users can create appraisals, report content, and manage their own items
+- **admin**: Admins have all user permissions plus access to admin panel, moderation system, and user management

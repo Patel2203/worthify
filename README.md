@@ -474,13 +474,6 @@ The frontend application will open automatically at `http://localhost:3000`
 - `PUT /api/appraisals/appraisals/:id` - Update appraisal (Authenticated)
 - `DELETE /api/appraisals/appraisals/:id` - Delete appraisal (Authenticated)
 
-#### Notifications
-- `GET /api/appraisals/notifications` - Get user notifications (Authenticated)
-- `GET /api/appraisals/notifications/unread/count` - Get unread count (Authenticated)
-- `PUT /api/appraisals/notifications/:id/read` - Mark notification as read (Authenticated)
-- `PUT /api/appraisals/notifications/read-all` - Mark all as read (Authenticated)
-- `DELETE /api/appraisals/notifications/:id` - Delete notification (Authenticated)
-
 #### Content Moderation
 - `POST /api/appraisals/reports` - Create a report (Authenticated)
 - `GET /api/appraisals/admin/reports` - Get all reports (Admin only)

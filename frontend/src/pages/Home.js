@@ -155,7 +155,7 @@ const Home = () => {
             </div>
             <div style={{ textAlign: 'center', marginTop: '30px' }}>
               <Link to="/feedback">
-                <button className="btn btn-primary" style={{ padding: '12px 30px' }}>
+                <button className="btn btn-secondary" style={{ padding: '12px 30px' }}>
                   Share Your Feedback
                 </button>
               </Link>

@@ -11,26 +11,6 @@ const PriceComparison = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [analysis, setAnalysis] = useState(null);
-  const [priceHistory, setPriceHistory] = useState(null);
-
-  const fetchPriceHistory = useCallback(async (itemId) => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`/api/prices/history/${itemId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      if (response.data.priceHistory) {
-        setPriceHistory({
-          priceHistory: response.data.priceHistory,
-          totalListings: response.data.totalListings
-        });
-      }
-    } catch (err) {
-      console.error('Failed to load price history:', err);
-    }
-  }, []);
 
   const fetchItemDetails = useCallback(async (itemId) => {
     try {
@@ -41,11 +21,10 @@ const PriceComparison = () => {
         }
       });
       setItemDetails(response.data.item);
-      fetchPriceHistory(itemId);
     } catch (err) {
       console.error('Failed to load item details:', err);
     }
-  }, [fetchPriceHistory]);
+  }, []);
 
   const fetchItems = useCallback(async () => {
     try {
@@ -91,11 +70,6 @@ const PriceComparison = () => {
       });
 
       setAnalysis(analysisRes.data.analysis);
-
-      // Refresh price history after analysis
-      if (selectedItem) {
-        fetchPriceHistory(selectedItem);
-      }
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to analyze prices');
       console.error(err);
@@ -114,7 +88,6 @@ const PriceComparison = () => {
       fetchItemDetails(itemId);
     } else {
       setItemDetails(null);
-      setPriceHistory(null);
       setAnalysis(null);
     }
   };
@@ -430,52 +403,6 @@ const PriceComparison = () => {
           </div>
         )}
 
-        {/* Price History */}
-        {priceHistory && priceHistory.priceHistory.length > 0 && (
-          <div className="card">
-            <h2>Price History</h2>
-            <p style={{ color: '#666', marginBottom: '20px' }}>
-              Total of {priceHistory.totalListings} price records
-            </p>
-
-            <div className="table-container">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Marketplace</th>
-                    <th>Title</th>
-                    <th>Price</th>
-                    <th>Date</th>
-                    <th>Link</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {priceHistory.priceHistory.slice(0, 20).map((log, idx) => (
-                    <tr key={log.id || idx}>
-                      <td>
-                        <span className="badge badge-user">{log.marketplace}</span>
-                      </td>
-                      <td>{log.listing_title}</td>
-                      <td style={{ fontWeight: '600', color: '#28a745' }}>
-                        ${parseFloat(log.price).toFixed(2)}
-                      </td>
-                      <td>{log.created_at ? new Date(log.created_at).toLocaleDateString() : 'N/A'}</td>
-                      <td>
-                        {log.listing_url && (
-                          <a href={log.listing_url} target="_blank" rel="noopener noreferrer">
-                            View →
-                          </a>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-              
       </div>
     </div>
   );

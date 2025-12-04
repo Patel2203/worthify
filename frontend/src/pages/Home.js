@@ -108,7 +108,7 @@ const Home = () => {
         {/* Testimonials Section */}
         {!loadingFeedback && feedback.length > 0 && (
           <div style={{ marginTop: '60px' }}>
-            <h2 style={{ textAlign: 'center', color: 'black', marginBottom: '30px', fontSize: '2rem' }}>
+            <h2 style={{ textAlign: 'center', color: 'white', marginBottom: '30px', fontSize: '2rem' }}>
               What Our Users Say
             </h2>
             <div style={{

@@ -1,6 +1,7 @@
 const { pool } = require('../config/database');
 const axios = require('axios');
 const imageRecognitionService = require('../services/imageRecognitionService');
+const { logApiCall } = require('../utils/apiLogger');
 
 // Analyze image and get price predictions (Third-party API integration)
 exports.analyzePrices = async (req, res, next) => {
@@ -277,6 +278,8 @@ async function fetchMarketplacePrices(keywords) {
 
 // eBay API call using actual credentials
 async function fetchEbayPrices(keywords) {
+  const ebaySearchUrl = 'https://api.sandbox.ebay.com/buy/browse/v1/item_summary/search';
+
   try {
     // First, get OAuth token
     const authResponse = await axios.post(
@@ -293,19 +296,19 @@ async function fetchEbayPrices(keywords) {
     const accessToken = authResponse.data.access_token;
 
     // Search for items using Browse API
-    const searchResponse = await axios.get(
-      'https://api.sandbox.ebay.com/buy/browse/v1/item_summary/search',
-      {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'X-EBAY-C-MARKETPLACE-ID': 'EBAY_US'
-        },
-        params: {
-          q: keywords,
-          limit: 10
-        }
+    const searchResponse = await axios.get(ebaySearchUrl, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'X-EBAY-C-MARKETPLACE-ID': 'EBAY_US'
+      },
+      params: {
+        q: keywords,
+        limit: 10
       }
-    );
+    });
+
+    // Log successful API call
+    await logApiCall('eBay API', `${ebaySearchUrl}?q=${keywords}`, searchResponse.status.toString());
 
     // Parse and return results
     if (searchResponse.data.itemSummaries && searchResponse.data.itemSummaries.length > 0) {
@@ -316,6 +319,8 @@ async function fetchEbayPrices(keywords) {
       }));
     }
   } catch (error) {
+    // Log failed API call
+    await logApiCall('eBay API', `${ebaySearchUrl}?q=${keywords}`, error.response?.status?.toString() || 'error');
     console.error('eBay API Error:', error.response?.data || error.message);
   }
 

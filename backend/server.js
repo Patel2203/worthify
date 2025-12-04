@@ -12,6 +12,7 @@ const priceRoutes = require('./routes/priceRoutes');
 const userRoutes = require('./routes/userRoutes');
 const appraisalRoutes = require('./routes/appraisalRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
+const apiLogsRoutes = require('./routes/apiLogsRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -38,7 +39,8 @@ app.get('/', (req, res) => {
       prices: '/api/prices',
       users: '/api/users',
       appraisals: '/api/appraisals',
-      feedback: '/api/feedback'
+      feedback: '/api/feedback',
+      apiLogs: '/api/api-logs'
     }
   });
 });
@@ -55,6 +57,7 @@ app.use('/api/prices', priceRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/appraisals', appraisalRoutes);
 app.use('/api/feedback', feedbackRoutes);
+app.use('/api/api-logs', apiLogsRoutes);
 
 // 404 handler
 app.use((req, res) => {

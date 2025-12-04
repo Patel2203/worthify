@@ -1,6 +1,7 @@
 const axios = require('axios');
 const path = require('path');
 const fs = require('fs').promises;
+const { logApiCall } = require('../utils/apiLogger');
 
 /**
  * Image Recognition Service using Google Cloud Vision API
@@ -137,13 +138,22 @@ async function analyzeWithGoogleVision(base64Image, apiKey) {
     ]
   };
 
-  const response = await axios.post(visionApiUrl, requestBody);
+  try {
+    const response = await axios.post(visionApiUrl, requestBody);
 
-  if (response.data.responses && response.data.responses[0]) {
-    return response.data.responses[0];
+    // Log successful API call
+    await logApiCall('Google Vision API', visionApiUrl, response.status.toString());
+
+    if (response.data.responses && response.data.responses[0]) {
+      return response.data.responses[0];
+    }
+
+    throw new Error('Invalid response from Google Vision API');
+  } catch (error) {
+    // Log failed API call
+    await logApiCall('Google Vision API', visionApiUrl, error.response?.status?.toString() || 'error');
+    throw error;
   }
-
-  throw new Error('Invalid response from Google Vision API');
 }
 
 /**

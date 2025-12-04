@@ -17,6 +17,7 @@ import AppraisalDetail from './pages/AppraisalDetail';
 import MyAppraisals from './pages/MyAppraisals';
 import Feedback from './pages/Feedback';
 import Moderation from './pages/Moderation';
+import Notifications from './pages/Notifications';
 
 import './App.css';
 
@@ -77,6 +78,14 @@ function App() {
               element={
                 <PrivateRoute roles={['user', 'admin']}>
                   <MyAppraisals />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/notifications"
+              element={
+                <PrivateRoute roles={['user', 'admin']}>
+                  <Notifications />
                 </PrivateRoute>
               }
             />

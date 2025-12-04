@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import NotificationBell from './NotificationBell';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -33,6 +34,8 @@ const Navbar = () => {
               {user.role === 'admin' && (
                 <Link to="/admin" className="nav-link">Admin Panel</Link>
               )}
+
+              <NotificationBell />
 
               <div className="nav-user">
                 <span className="user-name">{user.name}</span>

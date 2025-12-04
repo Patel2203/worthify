@@ -108,7 +108,7 @@ const Home = () => {
         {/* Testimonials Section */}
         {!loadingFeedback && feedback.length > 0 && (
           <div style={{ marginTop: '60px' }}>
-            <h2 style={{ textAlign: 'center', color: 'white', marginBottom: '30px', fontSize: '2rem' }}>
+            <h2 style={{ textAlign: 'center', color: 'black', marginBottom: '30px', fontSize: '2rem' }}>
               What Our Users Say
             </h2>
             <div style={{
@@ -155,7 +155,7 @@ const Home = () => {
             </div>
             <div style={{ textAlign: 'center', marginTop: '30px' }}>
               <Link to="/feedback">
-                <button className="btn btn-secondary" style={{ padding: '12px 30px' }}>
+                <button className="btn btn-primary" style={{ padding: '12px 30px' }}>
                   Share Your Feedback
                 </button>
               </Link>
